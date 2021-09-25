@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { useToken } from "../auth/useToken";
+import axios from "axios";
 
 const LoginPage = () => {
+  const [token, setToken] = useToken();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -10,7 +13,18 @@ const LoginPage = () => {
   const history = useHistory();
 
   const handleLogin = async () => {
+    const response = await axios.post("http://localhost:8080/api/login", {
+      email,
+      password,
+    });
+
+    const { token } = response.data;
+
+    setToken(token);
+
     console.log({ email, password });
+
+    history.push("/");
   };
   return (
     <div className="content-container">
